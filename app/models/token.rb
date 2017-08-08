@@ -1,20 +1,29 @@
-class Token < ApplicationRecord
+class Token
   EXPIRES = 7.days.ago
 
-  belongs_to :user
-  has_secure_token :body
+  def initialize(user)
+    @user = user
+  end
+
+  def body
+    @user.auth_token
+  end
+
+  def last_used_at
+    @user.token_last_used_at
+  end
 
   def active?
-    last_used_at >= EXPIRES
+    @user.token_last_used_at >= EXPIRES
   end
 
   def use
-    self.last_used_at = DateTime.now
-    save!
+    @user.token_last_used_at = Time.current
+    @user.save!
     self
   end
 
-  def compare_to(token_body)
-    ActiveSupport::SecurityUtils.secure_compare(body, token_body)
+  def compare_to(token)
+    ActiveSupport::SecurityUtils.secure_compare(body, token)
   end
 end

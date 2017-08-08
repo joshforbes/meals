@@ -1,8 +1,27 @@
 require 'test_helper'
 
 class TokenTest < ActiveSupport::TestCase
+  test 'a token can get the body' do
+    user = create(:user)
+    token = user.token
+
+    body = token.body
+
+    assert_equal(user.auth_token, body)
+  end
+
+  test 'a token can get the last used at' do
+    user = create(:user)
+    token = user.token
+
+    last_used_at = token.last_used_at
+
+    assert_equal(user.token_last_used_at, last_used_at)
+  end
+
   test 'a token is active if not expired' do
-    token = build(:token)
+    user = create(:user)
+    token = user.token
 
     active = token.active?
 
@@ -10,23 +29,26 @@ class TokenTest < ActiveSupport::TestCase
   end
 
   test 'using a token sets the last_used_at to now' do
-    token = create(:token, last_used_at: 10.days.ago)
+    user = create(:user, token_last_used_at: 10.days.ago)
+    token = user.token
 
-    token = token.use
+    token.use
 
-    assert_equal(DateTime.now.to_date, token.reload.last_used_at.to_date)
+    assert_equal(Time.current.to_date, user.token.last_used_at.to_date)
   end
 
   test 'it knows if it is equal to a token string' do
-    token = build(:token)
+    user = create(:user)
+    token = user.token
 
-    is_equal = token.compare_to(token.body)
+    is_equal = token.compare_to(user.token.body)
 
     assert(is_equal)
   end
 
   test 'it knows if the tokens are not equal' do
-    token = build(:token)
+    user = create(:user)
+    token = user.token
 
     is_equal = token.compare_to('not-equal')
 

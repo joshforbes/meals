@@ -13,10 +13,9 @@ class TokenStrategyTest < ActiveSupport::TestCase
   end
 
   test "authentication succeeds with valid email and token" do
-    token = create(:token)
-    user = token.user
+    user = create(:user)
     ENV["HTTP_USER_EMAIL"] = user.email
-    ENV["HTTP_AUTHORIZATION"] = token.body
+    ENV["HTTP_AUTHORIZATION"] = user.token.body
     strategy = TokenStrategy.new(ENV)
 
     auth_status = strategy.authenticate!
@@ -34,8 +33,8 @@ class TokenStrategyTest < ActiveSupport::TestCase
   end
 
   test "fails authentication if the tokens do not match" do
-    token = create(:token)
-    user = token.user
+    user = create(:user)
+
     ENV["HTTP_USER_EMAIL"] = user.email
     ENV["HTTP_AUTHORIZATION"] = 'abcdef'
     strategy = TokenStrategy.new(ENV)
