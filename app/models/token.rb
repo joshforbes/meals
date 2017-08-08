@@ -13,6 +13,10 @@ class Token
     @user.token_last_used_at
   end
 
+  def regenerate
+    @user.regenerate_auth_token
+  end
+
   def active?
     @user.token_last_used_at >= EXPIRES
   end

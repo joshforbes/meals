@@ -19,6 +19,16 @@ class TokenTest < ActiveSupport::TestCase
     assert_equal(user.token_last_used_at, last_used_at)
   end
 
+  test 'it can regenerate the token body' do
+    user = create(:user)
+    token = user.token
+    old_token_body = token.body
+
+    token.regenerate
+
+    assert_not_equal(token.body, old_token_body)
+  end
+
   test 'a token is active if not expired' do
     user = create(:user)
     token = user.token

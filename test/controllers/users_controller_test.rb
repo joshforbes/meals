@@ -6,7 +6,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show user" do
-    get user_url(@user), as: :json
+    get user_url(@user), as: :json, headers: auth_headers(@user)
     assert_response :success
   end
 
@@ -30,7 +30,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
             email: 'test@test.com',
             password: 'Tester12'
         }
-    }, as: :json
+    }, as: :json, headers: auth_headers(@user)
 
     @user.reload
 

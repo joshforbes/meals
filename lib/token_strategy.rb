@@ -15,6 +15,7 @@ class TokenStrategy < ::Warden::Strategies::Base
       return success!(user)
     end
 
+    user.token.regenerate
     fail!(failure_message)
   end
 
