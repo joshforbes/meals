@@ -6,8 +6,10 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show user" do
-    get user_url(@user), as: :json, headers: auth_headers(@user)
+    get user_url(@user), headers: auth_headers(@user)
+    
     assert_response :success
+    assert_equal UserSerializer.new(@user).to_json, response.body
   end
 
   test "should create user" do
@@ -17,7 +19,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
               email: 'test@test.com',
               password: 'Tester12'
           }
-      }, as: :json
+      }
     end
 
     assert_response 201
@@ -30,7 +32,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
             email: 'test@test.com',
             password: 'Tester12'
         }
-    }, as: :json, headers: auth_headers(@user)
+    }, headers: auth_headers(@user)
 
     @user.reload
 
