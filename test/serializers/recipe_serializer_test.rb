@@ -6,7 +6,6 @@ class RecipeSerializerTest < ActiveSupport::TestCase
       id: recipe.id,
       user_id: recipe.user_id,
       name: recipe.name,
-      user: UserSerializer.new(recipe.user)
     }.to_json
   end
 
