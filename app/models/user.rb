@@ -7,6 +7,7 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 8 }, allow_nil: true
 
   has_many :recipes
+  has_many :meals
 
   def token
     Token.new(self)
